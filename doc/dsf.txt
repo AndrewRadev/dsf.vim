@@ -1,0 +1,92 @@
+*dsf.txt*	Delete surrounding function call
+
+==============================================================================
+CONTENTS                                        *dsf*   *dsf-contents*
+
+    Installation................................: |dsf-installation|
+    Usage.......................................: |dsf-usage|
+    Issues......................................: |dsf-issues|
+
+
+==============================================================================
+INSTALLATION                                            *dsf-installation*
+
+There are several ways to install the plugin. The recommended one is by using
+Tim Pope's pathogen (http://www.vim.org/scripts/script.php?script_id=2332). In
+that case, you can clone the plugin's git repository like so:
+>
+    git clone https://github.com/AndrewRadev/dsf.vim ~/.vim/bundle/dsf
+<
+If your vim configuration is under git version control, you could also set up
+the repository as a submodule, which would allow you to update more easily.
+The command is (provided you're in ~/.vim):
+>
+    git submodule add https://github.com/AndrewRadev/dsf.vim bundle/dsf
+<
+
+Another way is to simply copy all the essential directories inside the ~/.vim
+directory: autoload, doc, plugin.
+
+
+==============================================================================
+USAGE                                                          *dsf-usage*
+
+The plugin defines a mapping to delete a surrounding function call (or
+something similar to one), even if it happens to be namespaced. Some examples:
+>
+    nested(function_call(cursor_here))   -> nested(cursor_here)
+    nested(cursor_here(chewy_center))    -> cursor_here(chewy_center)
+    One::Two.new([cursor_here])          -> [cursor_here]
+    One::Two.new(Hash[cursor_here])      -> One::Two.new(cursor_here)
+    SomeStruct{cursor_here: "Something"} -> cursor_here: "Something"
+<
+By pressing `dsf` (which stands for "delete surrounding function call") with
+the cursor on `cursor_here`, you get the result on the right.
+
+The plugin also defines `csf` to "change surrounding function call", which
+deletes only the function itself and leaves the cursor waiting to enter a new
+name.
+
+The plugin also defines text objects for `if` and `af` to manipulate function
+calls with their contents. Given this example:
+>
+    var result = function_call(one, two);
+<
+Typing `daf` ("a function call") with the cursor anywhere on
+`function_call(one, two)` would result in:
+>
+    var result = ;
+<
+Typing `dif` ("inner function call") with the cursor anywhere on
+`function_call(one, two)` would result in:
+>
+    var result = function_call();
+<
+To learn more about how text objects work, try the `:help` for |text-objects|.
+
+If you'd like to set your own mappings, instead of using the built-ins, simply
+set the variable `g:dsf_no_mappings` to `1` and use the <Plug> mappings
+provided by the plugin:
+
+>
+    let g:dsf_no_mappings = 1
+
+    nmap dsf <Plug>DsfDelete
+    nmap csf <Plug>DsfChange
+
+    omap af <Plug>DsfTextObjectA
+    xmap af <Plug>DsfTextObjectA
+    omap if <Plug>DsfTextObjectI
+    xmap if <Plug>DsfTextObjectI
+<
+Change any of the left-hand sides of the `map` calls to whatever you'd like.
+
+
+==============================================================================
+ISSUES                                                        *dsf-issues*
+
+Any issues and suggestions are very welcome on the github bugtracker:
+https://github.com/AndrewRadev/dsf.vim/issues
+
+
+vim:tw=78:sw=4:ft=help:norl:
