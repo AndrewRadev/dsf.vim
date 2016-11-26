@@ -1,7 +1,7 @@
-*Note: Special thanks to @faceleg, who seems to have extracted this plugin
-from my vimfiles before I did. If you'd like a simpler version of this plugin
-for whatever reason, feel free to use [this
-one](https://github.com/faceleg/delete-surrounding-function-call.vim)*
+*Note: Special thanks to [@faceleg](https://github.com/faceleg), who seems to
+have extracted this plugin from my vimfiles before I did. If you'd like a
+simpler version of this plugin for whatever reason, feel free to use [this
+one](https://github.com/faceleg/delete-surrounding-function-call.vim).*
 
 ## Usage
 
