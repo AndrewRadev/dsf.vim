@@ -1,3 +1,8 @@
+*Note: Special thanks to @faceleg, who seems to have extracted this plugin
+from my vimfiles before I did. If you'd like a simpler version of this plugin
+for whatever reason, feel free to use [this
+one](https://github.com/faceleg/delete-surrounding-function-call.vim)*
+
 ## Usage
 
 The plugin defines a mapping to delete a surrounding function call (or something similar to one), even if it happens to be namespaced. Some examples:
