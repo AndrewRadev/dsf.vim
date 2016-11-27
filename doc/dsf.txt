@@ -1,15 +1,16 @@
 *dsf.txt*	Delete surrounding function call
 
 ==============================================================================
-CONTENTS                                        *dsf*   *dsf-contents*
+CONTENTS                                                    *dsf*   *dsf-contents*
 
     Installation................................: |dsf-installation|
     Usage.......................................: |dsf-usage|
+    Settings....................................: |dsf-settings|
     Issues......................................: |dsf-issues|
 
 
 ==============================================================================
-INSTALLATION                                            *dsf-installation*
+INSTALLATION                                                  *dsf-installation*
 
 There are several ways to install the plugin. The recommended one is by using
 Tim Pope's pathogen (http://www.vim.org/scripts/script.php?script_id=2332). In
@@ -29,7 +30,7 @@ directory: autoload, doc, plugin.
 
 
 ==============================================================================
-USAGE                                                          *dsf-usage*
+USAGE                                                                *dsf-usage*
 
 The plugin defines a mapping to delete a surrounding function call (or
 something similar to one), even if it happens to be namespaced. Some examples:
@@ -67,7 +68,6 @@ To learn more about how text objects work, try the `:help` for |text-objects|.
 If you'd like to set your own mappings, instead of using the built-ins, simply
 set the variable `g:dsf_no_mappings` to `1` and use the <Plug> mappings
 provided by the plugin:
-
 >
     let g:dsf_no_mappings = 1
 
@@ -81,9 +81,86 @@ provided by the plugin:
 <
 Change any of the left-hand sides of the `map` calls to whatever you'd like.
 
+For additional settings check the below section, |dsf-settings|.
+
 
 ==============================================================================
-ISSUES                                                        *dsf-issues*
+SETTINGS                                                          *dsf-settings*
+
+                                                             *g:dsf_no_mappings*
+>
+    let g:dsf_no_mappings = 1
+<
+
+Default value: 0
+
+If you set this variable to 1, the plugin will not define any default
+mappings. You'll still have the <Plug> maps provided to you that you can map
+any keys you want to. Check |dsf-usage| for details on that.
+
+                                                                *g:dsf_brackets*
+>
+    let g:dsf_brackets = '('
+<
+
+Default value: '([{'
+
+You can change this value to determine what brackets identify a "function
+call". While in most languages, only "(" is used for those, a useful (even if
+technically incorrect) interpretation of "function call" might include things
+like `Hash[*some_list]` in ruby, or `SomeStruct{with: "values"}` in go. This
+is why the plugin, by default, considers "([{" as brackets.
+
+If you'd like to avoid this, so you don't accidentally delete structs or
+something, set this to whatever opening brackets you'd like to detect.
+
+Note that this can be changed per-buffer by setting `b:dsf_brackets`.
+
+                                                        *g:dsf_function_pattern*
+>
+    let g:dsf_function_pattern = '\k\+'
+<
+
+Default value: '\k\+[?!]\='
+
+The function pattern determines what will be identified as a function name.
+This should not include the opening bracket. Usually, a keyword character will
+do the trick, but the default also adds some extra characters allowed at the
+end to cover special cases for ruby.
+
+The pattern is a Vim regex, if you need more information on those, check the
+:help on |pattern-overview|.
+
+Note that this can be changed per-buffer by setting `b:dsf_function_pattern`.
+
+                                                       *g:dsf_namespace_pattern*
+>
+    let g:dsf_namespace_pattern = '\k\+::'
+<
+
+Default value: '\k\+\%(\.\|::\|:\|#\)'
+
+The namespace pattern determines what will be identified as a namespace that
+prefixes a function. This will likely be a set of keyword characters, followed
+by something like "::", ".", depending on the language. The default includes a
+set of characters that cover a few languages.
+
+If you'd like to NOT cover namespaces at all, and just manipulate the function
+name, set it to the empty string:
+>
+    let g:namespace_pattern = ''
+<
+This might allow you, to, for example, easily change the function call with
+`csf` to a different one in the same module/package.
+
+The pattern is a Vim regex, if you need more information on those, check the
+:help on |pattern-overview|.
+
+Note that this can be changed per-buffer by setting `b:dsf_namespace_pattern`.
+
+
+==============================================================================
+ISSUES                                                              *dsf-issues*
 
 Any issues and suggestions are very welcome on the github bugtracker:
 https://github.com/AndrewRadev/dsf.vim/issues

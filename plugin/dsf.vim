@@ -10,6 +10,18 @@ if !exists('g:dsf_no_mappings')
   let g:dsf_no_mappings = 0
 endif
 
+if !exists('g:dsf_brackets')
+  let g:dsf_brackets = '([{'
+endif
+
+if !exists('g:dsf_function_pattern')
+  let g:dsf_function_pattern = '\k\+[?!]\='
+endif
+
+if !exists('g:dsf_namespace_pattern')
+  let g:dsf_namespace_pattern = '\k\+\%(\.\|::\|:\|#\)'
+endif
+
 nnoremap <silent> <Plug>DsfDelete :call <SID>DeleteSurroundingFunctionCall()<cr>
 function! s:DeleteSurroundingFunctionCall()
   let [success, opening_bracket] = dsf#SearchFunctionStart('b')

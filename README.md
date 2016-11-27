@@ -59,6 +59,8 @@ xmap if <Plug>DsfTextObjectI
 
 Change any of the left-hand sides of the `map` calls to whatever you'd like.
 
+For additional settings, check the full documentation with `:help dsf-settings`.
+
 ## Contributing
 
 Pull requests are welcome, but take a look at [CONTRIBUTING.md](https://github.com/AndrewRadev/dsf.vim/blob/master/CONTRIBUTING.md) first for some guidelines.
