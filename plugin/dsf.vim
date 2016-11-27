@@ -23,7 +23,7 @@ function! s:DeleteSurroundingFunctionCall()
   normal %
   normal! "_x``"_x
 
-  silent! call repeat#set('dsf')
+  silent! call repeat#set("\<Plug>DsfDelete")
 endfunction
 
 nnoremap <silent> <Plug>DsfChange :call <SID>ChangeSurroundingFunctionCall()<cr>
@@ -34,7 +34,6 @@ function! s:ChangeSurroundingFunctionCall()
   endif
 
   call feedkeys('ct'.opening_bracket)
-  silent! call repeat#set('csf')
 endfunction
 
 " Operate on a function call
