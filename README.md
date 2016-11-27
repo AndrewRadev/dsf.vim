@@ -40,7 +40,7 @@ Typing `dif` ("delete inner function call") with the cursor anywhere on `functio
 var result = function_call();
 ```
 
-To learn more about how text objects work, try `:help text-objects`.
+To learn more about how text objects work, try [`:help text-objects`](http://vimhelp.appspot.com/motion.txt.html#text%2dobjects).
 
 If you'd like to set your own mappings, instead of using the built-ins, simply set the variable `g:dsf_no_mappings` to `1` and use the <Plug> mappings provided by the plugin:
 
@@ -59,7 +59,7 @@ xmap if <Plug>DsfTextObjectI
 
 Change any of the left-hand sides of the `map` calls to whatever you'd like.
 
-For additional settings, check the full documentation with `:help dsf-settings`.
+For additional settings, check the full documentation with [`:help dsf-settings`](https://github.com/AndrewRadev/dsf.vim/blob/master/doc/dsf.txt).
 
 ## Contributing
 
