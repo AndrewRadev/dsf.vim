@@ -45,7 +45,7 @@ function! s:ChangeSurroundingFunctionCall()
     return
   endif
 
-  call feedkeys('ct'.opening_bracket)
+  call feedkeys('ct'.opening_bracket, 'n')
 endfunction
 
 " Operate on a function call
@@ -66,7 +66,7 @@ function! s:FunctionCallTextObject(mode)
   if a:mode == 'i'
     exe 'normal! f'.opening_bracket.'vi'.opening_bracket
   else " a:mode == 'a'
-    exe 'normal vf'.opening_bracket.'%'
+    exe 'normal! vf'.opening_bracket.'%'
   endif
 endfunction
 
