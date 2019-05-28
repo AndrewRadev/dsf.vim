@@ -15,7 +15,7 @@ if !exists('g:dsf_brackets')
 endif
 
 if !exists('g:dsf_function_pattern')
-  let g:dsf_function_pattern = '\k\+[?!]\='
+  let g:dsf_function_pattern = '\k\+[?!.]\='
 endif
 
 if !exists('g:dsf_namespace_pattern')
