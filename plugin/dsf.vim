@@ -33,13 +33,31 @@ function! s:DeleteSurroundingFunctionCall()
     return
   endif
 
+  call s:Delete(opening_bracket)
+
+  silent! call repeat#set("\<Plug>DsfDelete")
+endfunction
+
+nnoremap <silent> <Plug>DsfNextDelete :call <SID>DeleteNextSurroundingFunctionCall()<cr>
+function! s:DeleteNextSurroundingFunctionCall()
+  let [success, opening_bracket] = dsf#SearchFunctionStart('')
+  if !success
+    " fall back to the standard case
+    return s:DeleteSurroundingFunctionCall()
+  endif
+
+  call s:Delete(opening_bracket)
+
+  silent! call repeat#set("\<Plug>DsfNextDelete")
+endfunction
+
+" Actually perform the deletion -- expects to be at the start of a function call.
+function! s:Delete(opening_bracket)
   " delete everything up to the bracket
-  exe 'normal! dt'.opening_bracket
+  exe 'normal! dt'.a:opening_bracket
   " delete the matching bracket, and then this one
   normal %
   normal! "_x``"_x
-
-  silent! call repeat#set("\<Plug>DsfDelete")
 endfunction
 
 nnoremap <silent> <Plug>DsfChange :call <SID>ChangeSurroundingFunctionCall()<cr>
@@ -77,6 +95,8 @@ endfunction
 if !g:dsf_no_mappings
   nmap dsf <Plug>DsfDelete
   nmap csf <Plug>DsfChange
+
+  nmap dsnf <Plug>DsfNextDelete
 
   omap af <Plug>DsfTextObjectA
   xmap af <Plug>DsfTextObjectA

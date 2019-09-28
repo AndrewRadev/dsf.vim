@@ -20,9 +20,17 @@ SomeStruct{cursor_here: "Something"} //=> cursor_here: "Something"
 
 By pressing `dsf` (which stands for "delete surrounding function call") with the cursor on `cursor_here`, you get the result on the right.
 
-The plugin also defines `csf` to "change surrounding function call", which deletes only the function itself and leaves the cursor waiting to enter a new name.
+The plugin defines `csf` to "change surrounding function call", which deletes only the function itself and leaves the cursor waiting to enter a new name.
 
-The plugin also defines text objects for `if` and `af` to manipulate function calls with their contents. Given this example:
+For convenience, the `dsnf` (the "n" standing for "next") mapping will look for a function call after the cursor to delete:
+
+``` javascript
+var result = function_call(foo, bar(baz));
+// With the cursor on "foo", pressing dsnf results in:
+var result = function_call(foo, baz);
+```
+
+The text objects for `if` and `af` manipulate function calls with their contents. Given this example:
 
 ``` javascript
 var result = function_call(one, two);
@@ -51,13 +59,15 @@ let g:dsf_no_mappings = 1
 nmap dsf <Plug>DsfDelete
 nmap csf <Plug>DsfChange
 
+nmap dsnf <Plug>DsfNextDelete
+
 omap af <Plug>DsfTextObjectA
 xmap af <Plug>DsfTextObjectA
 omap if <Plug>DsfTextObjectI
 xmap if <Plug>DsfTextObjectI
 ```
 
-Change any of the left-hand sides of the `map` calls to whatever you'd like.
+Change any of the left-hand sides of the `map` calls to whatever you'd like, or remove lines to leave them unset.
 
 For additional settings, check the full documentation with [`:help dsf-settings`](https://github.com/AndrewRadev/dsf.vim/blob/master/doc/dsf.txt).
 
