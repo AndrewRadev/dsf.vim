@@ -60,6 +60,7 @@ nmap dsf <Plug>DsfDelete
 nmap csf <Plug>DsfChange
 
 nmap dsnf <Plug>DsfNextDelete
+nmap csnf <Plug>DsfNextChange
 
 omap af <Plug>DsfTextObjectA
 xmap af <Plug>DsfTextObjectA
