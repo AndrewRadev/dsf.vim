@@ -70,6 +70,17 @@ function! s:ChangeSurroundingFunctionCall()
   call feedkeys('ct'.opening_bracket, 'n')
 endfunction
 
+nnoremap <silent> <Plug>DsfNextChange :call <SID>ChangeNextSurroundingFunctionCall()<cr>
+function! s:ChangeNextSurroundingFunctionCall()
+  let [success, opening_bracket] = dsf#SearchFunctionStart('')
+  if !success
+    " fall back to the standard case
+    return s:ChangeSurroundingFunctionCall()
+  endif
+
+  call feedkeys('ct'.opening_bracket, 'n')
+endfunction
+
 " Operate on a function call
 onoremap <Plug>DsfTextObjectA :<c-u>call <SID>FunctionCallTextObject('a')<cr>
 xnoremap <Plug>DsfTextObjectA :<c-u>call <SID>FunctionCallTextObject('a')<cr>
@@ -97,6 +108,7 @@ if !g:dsf_no_mappings
   nmap csf <Plug>DsfChange
 
   nmap dsnf <Plug>DsfNextDelete
+  nmap csnf <Plug>DsfNextChange
 
   omap af <Plug>DsfTextObjectA
   xmap af <Plug>DsfTextObjectA
