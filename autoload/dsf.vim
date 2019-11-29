@@ -3,14 +3,23 @@
 "
 " Returns [success, opening_bracket]
 "
-function! dsf#SearchFunctionStart(flags)
+function! dsf#SearchFunctionStart(direction)
   let brackets          = dsf#Setting('dsf_brackets')
   let function_pattern  = dsf#Setting('dsf_function_pattern')
   let namespace_pattern = dsf#Setting('dsf_namespace_pattern')
   let cursor_col        = col('.')
 
+  if a:direction == 'forwards'
+    let flags = ''
+  elseif a:direction == 'backwards'
+    let flags = 'b'
+  else
+    echoerr "Unknown direction: ".a:direction
+    return
+  endif
+
   while 1
-    let search_result = search(function_pattern.'\zs['.brackets.']', a:flags, line('.'))
+    let search_result = search(function_pattern.'\zs['.brackets.']', flags, line('.'))
     if search_result <= 0
       return [0, '']
     endif
@@ -20,7 +29,7 @@ function! dsf#SearchFunctionStart(flags)
     let closing_col = col('.')
     normal %
 
-    if stridx(a:flags, 'b') >= 0
+    if a:direction == 'backwards'
       if opening_col <= cursor_col && cursor_col <= closing_col
         " then the cursor is within the brackets, we're good
         break
@@ -31,10 +40,13 @@ function! dsf#SearchFunctionStart(flags)
       else
         return [0, '']
       endif
-    else
+    elseif a:direction == 'forwards'
       " we're not going backwards, so we're okay with jumping to the next
       " function call
       break
+    else
+      echoerr "Unknown direction: ".a:direction
+      return
     endif
   endwhile
 
