@@ -44,4 +44,18 @@ RSpec.describe "Python (delete next)" do
       foo = function_call(index)
     EOF
   end
+
+  specify "nested call chain: jumps to the next call" do
+    set_file_contents <<~EOF
+      baz = bar( foo( far ).faz( boo ) )
+    EOF
+
+    vim.search 'far'
+    vim.feedkeys 'dsnf'
+    vim.write
+
+    assert_file_contents <<~EOF
+      baz = bar( foo( far ). boo  )
+    EOF
+  end
 end

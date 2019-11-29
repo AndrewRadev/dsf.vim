@@ -58,4 +58,18 @@ RSpec.describe "Python (common/generic functionality)" do
       foo = index
     EOF
   end
+
+  specify "nested call chain: doesn't jump to the previous call" do
+    set_file_contents <<~EOF
+      baz = bar(foo( far ).faz( boo ))
+    EOF
+
+    vim.search 'faz'
+    vim.feedkeys 'dsf'
+    vim.write
+
+    assert_file_contents <<~EOF
+      baz = foo( far ).faz( boo )
+    EOF
+  end
 end

@@ -7,10 +7,36 @@ function! dsf#SearchFunctionStart(flags)
   let brackets          = dsf#Setting('dsf_brackets')
   let function_pattern  = dsf#Setting('dsf_function_pattern')
   let namespace_pattern = dsf#Setting('dsf_namespace_pattern')
+  let cursor_col        = col('.')
 
-  if search(function_pattern.'\zs['.brackets.']', a:flags, line('.')) <= 0
-    return [0, '']
-  endif
+  while 1
+    let search_result = search(function_pattern.'\zs['.brackets.']', a:flags, line('.'))
+    if search_result <= 0
+      return [0, '']
+    endif
+
+    let opening_col = col('.')
+    normal %
+    let closing_col = col('.')
+    normal %
+
+    if stridx(a:flags, 'b') >= 0
+      if opening_col <= cursor_col && cursor_col <= closing_col
+        " then the cursor is within the brackets, we're good
+        break
+      elseif col('.') > 1
+        " search is backwards, so we can keep going
+        normal! h
+        continue
+      else
+        return [0, '']
+      endif
+    else
+      " we're not going backwards, so we're okay with jumping to the next
+      " function call
+      break
+    endif
+  endwhile
 
   " what's the opening bracket?
   let opener = getline('.')[col('.') - 1]
