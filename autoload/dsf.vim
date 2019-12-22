@@ -12,7 +12,7 @@ function! dsf#SearchFunctionStart(direction)
   if a:direction == 'forwards'
     let flags = ''
   elseif a:direction == 'backwards'
-    let flags = 'b'
+    let flags = 'bc'
   else
     echoerr "Unknown direction: ".a:direction
     return

@@ -72,4 +72,18 @@ RSpec.describe "Python (common/generic functionality)" do
       baz = foo( far ).faz( boo )
     EOF
   end
+
+  specify "cursor on the opening bracket" do
+    set_file_contents <<~EOF
+      foo = function_call(bar)
+    EOF
+
+    vim.search '(bar'
+    vim.feedkeys 'dsf'
+    vim.write
+
+    assert_file_contents <<~EOF
+      foo = bar
+    EOF
+  end
 end
