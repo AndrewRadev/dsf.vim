@@ -10,9 +10,9 @@ function! dsf#SearchFunctionStart(direction)
   let cursor_col        = col('.')
 
   if a:direction == 'forwards'
-    let flags = ''
+    let flags = 'c'
   elseif a:direction == 'backwards'
-    let flags = 'bc'
+    let flags = 'b'
   else
     echoerr "Unknown direction: ".a:direction
     return
