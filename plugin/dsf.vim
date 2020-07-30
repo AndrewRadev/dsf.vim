@@ -55,9 +55,21 @@ endfunction
 function! s:Delete(opening_bracket)
   " delete everything up to the bracket
   exe 'normal! dt'.a:opening_bracket
-  " delete the matching bracket, and then this one
+
+  " jump to the matching bracket
   normal %
-  normal! "_x``"_x
+
+  if line('.') > 1 && search('^\s*\%#', 'Wbcn', line('.'))
+    " then we have a multiline closing bracket, delete till the previous line
+    normal! vk$"_d
+  else
+    normal! "_x
+  endif
+
+  normal! ``
+  let saved_view = winsaveview()
+  keeppatterns exe 's/\%#'.escape(a:opening_bracket, '[').'\_s*//'
+  call winrestview(saved_view)
 endfunction
 
 nnoremap <silent> <Plug>DsfChange :call <SID>ChangeSurroundingFunctionCall()<cr>

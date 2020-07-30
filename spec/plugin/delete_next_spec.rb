@@ -55,7 +55,7 @@ RSpec.describe "Python (delete next)" do
     vim.write
 
     assert_file_contents <<~EOF
-      baz = bar( foo( far ). boo  )
+      baz = bar( foo( far ).boo  )
     EOF
   end
 end
