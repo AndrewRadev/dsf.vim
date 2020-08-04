@@ -58,11 +58,16 @@ function! s:Delete(opening_bracket)
 
   " jump to the matching bracket
   normal %
+  let closing_bracket = getline('.')[col('.') - 1]
 
   if line('.') > 1 && search('^\s*\%#', 'Wbcn', line('.'))
     " then we have a multiline closing bracket, delete till the previous line
     normal! vk$"_d
+  elseif search('\s\+\%#', 'Wb', line('.'))
+    " then we have whitespace before the line, clear it
+    exe 'normal! "_df'.closing_bracket
   else
+    " just the bracket, delete it
     normal! "_x
   endif
 
