@@ -28,7 +28,7 @@ autocmd FileType vim  let b:dsf_namespace_pattern = '\k\+\%(\.\|:\|#\)'
 
 nnoremap <silent> <Plug>DsfDelete :call <SID>DeleteSurroundingFunctionCall()<cr>
 function! s:DeleteSurroundingFunctionCall()
-  let [success, opening_bracket] = dsf#SearchFunctionStart('backwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('backwards', 'cursor')
   if !success
     return
   endif
@@ -40,7 +40,7 @@ endfunction
 
 nnoremap <silent> <Plug>DsfNextDelete :call <SID>DeleteNextSurroundingFunctionCall()<cr>
 function! s:DeleteNextSurroundingFunctionCall()
-  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards', 'global')
   if !success
     " fall back to the standard case
     return s:DeleteSurroundingFunctionCall()
@@ -79,7 +79,7 @@ endfunction
 
 nnoremap <silent> <Plug>DsfChange :call <SID>ChangeSurroundingFunctionCall()<cr>
 function! s:ChangeSurroundingFunctionCall()
-  let [success, opening_bracket] = dsf#SearchFunctionStart('backwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('backwards', 'cursor')
   if !success
     return
   endif
@@ -89,7 +89,7 @@ endfunction
 
 nnoremap <silent> <Plug>DsfNextChange :call <SID>ChangeNextSurroundingFunctionCall()<cr>
 function! s:ChangeNextSurroundingFunctionCall()
-  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards', 'global')
   if !success
     " fall back to the standard case
     return s:ChangeSurroundingFunctionCall()
@@ -104,9 +104,9 @@ xnoremap <Plug>DsfTextObjectA :<c-u>call <SID>FunctionCallTextObject('a')<cr>
 onoremap <Plug>DsfTextObjectI :<c-u>call <SID>FunctionCallTextObject('i')<cr>
 xnoremap <Plug>DsfTextObjectI :<c-u>call <SID>FunctionCallTextObject('i')<cr>
 function! s:FunctionCallTextObject(mode)
-  let [success, opening_bracket] = dsf#SearchFunctionStart('cursor-forwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards', 'cursor')
   if !success
-    let [success, opening_bracket] = dsf#SearchFunctionStart('backwards')
+    let [success, opening_bracket] = dsf#SearchFunctionStart('backwards', 'cursor')
   endif
 
   if !success
