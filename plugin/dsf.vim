@@ -104,7 +104,7 @@ xnoremap <Plug>DsfTextObjectA :<c-u>call <SID>FunctionCallTextObject('a')<cr>
 onoremap <Plug>DsfTextObjectI :<c-u>call <SID>FunctionCallTextObject('i')<cr>
 xnoremap <Plug>DsfTextObjectI :<c-u>call <SID>FunctionCallTextObject('i')<cr>
 function! s:FunctionCallTextObject(mode)
-  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('cursor-forwards')
   if !success
     let [success, opening_bracket] = dsf#SearchFunctionStart('backwards')
   endif

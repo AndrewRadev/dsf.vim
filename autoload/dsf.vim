@@ -4,12 +4,13 @@
 " Returns [success, opening_bracket]
 "
 function! dsf#SearchFunctionStart(direction)
+  let saved_view        = winsaveview()
   let brackets          = dsf#Setting('dsf_brackets')
   let function_pattern  = dsf#Setting('dsf_function_pattern')
   let namespace_pattern = dsf#Setting('dsf_namespace_pattern')
   let cursor_pos        = getpos('.')
 
-  if a:direction == 'forwards'
+  if a:direction == 'cursor-forwards' || a:direction == 'forwards'
     let flags = 'Wc'
   elseif a:direction == 'backwards'
     let flags = 'Wb'
@@ -40,7 +41,7 @@ function! dsf#SearchFunctionStart(direction)
       else
         return [0, '']
       endif
-    elseif a:direction == 'forwards'
+    elseif a:direction == 'cursor-forwards' || a:direction == 'forwards'
       " we're not going backwards, so we're okay with jumping to the next
       " function call
       break
@@ -66,6 +67,17 @@ function! dsf#SearchFunctionStart(direction)
       endif
       let prefix = strpart(getline('.'), 0, col('.') - 1)
     endwhile
+  endif
+
+  if a:direction == 'cursor-forwards'
+    let function_start_pos = getpos('.')
+
+    if !s:Between(cursor_pos, function_start_pos, closing_pos)
+      " then we've found a function outside of the cursor position, it doesn't
+      " work for this search
+      call winrestview(saved_view)
+      return [0, '']
+    endif
   endif
 
   return [1, opener]

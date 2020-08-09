@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe "Multiline" do
+RSpec.describe "Ruby (Multiline)" do
   let(:filename) { 'test.rb' }
 
   specify "basic" do
