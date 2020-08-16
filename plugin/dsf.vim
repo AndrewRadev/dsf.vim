@@ -22,9 +22,15 @@ if !exists('g:dsf_namespace_pattern')
   let g:dsf_namespace_pattern = '\k\+\%(\.\|::\)'
 endif
 
-autocmd FileType ruby let b:dsf_function_pattern  = '\k\+[?!.]\='
-autocmd FileType rust let b:dsf_function_pattern  = '\k\+!\='
-autocmd FileType vim  let b:dsf_namespace_pattern = '\k\+\%(\.\|:\|#\)'
+autocmd FileType ruby
+      \ let b:dsf_function_pattern = '\k\+[?!.]\='
+autocmd FileType rust
+      \ let b:dsf_function_pattern  = '\k\+!\='
+autocmd FileType css,scss,less
+      \ let b:dsf_function_pattern = '\(\k\|-\)\+'
+
+autocmd FileType vim
+      \ let b:dsf_namespace_pattern = '\k\+\%(\.\|:\|#\)'
 
 nnoremap <silent> <Plug>DsfDelete :call <SID>DeleteSurroundingFunctionCall()<cr>
 function! s:DeleteSurroundingFunctionCall()
