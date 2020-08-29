@@ -34,7 +34,7 @@ autocmd FileType vim
 
 nnoremap <silent> <Plug>DsfDelete :call <SID>DeleteSurroundingFunctionCall()<cr>
 function! s:DeleteSurroundingFunctionCall()
-  let [success, opening_bracket] = dsf#SearchFunctionStart('backwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('backwards', 'cursor')
   if !success
     return
   endif
@@ -46,7 +46,7 @@ endfunction
 
 nnoremap <silent> <Plug>DsfNextDelete :call <SID>DeleteNextSurroundingFunctionCall()<cr>
 function! s:DeleteNextSurroundingFunctionCall()
-  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards', 'global')
   if !success
     " fall back to the standard case
     return s:DeleteSurroundingFunctionCall()
@@ -61,14 +61,31 @@ endfunction
 function! s:Delete(opening_bracket)
   " delete everything up to the bracket
   exe 'normal! dt'.a:opening_bracket
-  " delete the matching bracket, and then this one
+
+  " jump to the matching bracket
   normal %
-  normal! "_x``"_x
+  let closing_bracket = getline('.')[col('.') - 1]
+
+  if line('.') > 1 && search('^\s*\%#', 'Wbcn', line('.'))
+    " then we have a multiline closing bracket, delete till the previous line
+    normal! vk$"_d
+  elseif search('\s\+\%#', 'Wb', line('.'))
+    " then we have whitespace before the line, clear it
+    exe 'normal! "_df'.closing_bracket
+  else
+    " just the bracket, delete it
+    normal! "_x
+  endif
+
+  normal! ``
+  let saved_view = winsaveview()
+  keeppatterns exe 's/\%#'.escape(a:opening_bracket, '[').'\_s*//'
+  call winrestview(saved_view)
 endfunction
 
 nnoremap <silent> <Plug>DsfChange :call <SID>ChangeSurroundingFunctionCall()<cr>
 function! s:ChangeSurroundingFunctionCall()
-  let [success, opening_bracket] = dsf#SearchFunctionStart('backwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('backwards', 'cursor')
   if !success
     return
   endif
@@ -78,7 +95,7 @@ endfunction
 
 nnoremap <silent> <Plug>DsfNextChange :call <SID>ChangeNextSurroundingFunctionCall()<cr>
 function! s:ChangeNextSurroundingFunctionCall()
-  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards', 'global')
   if !success
     " fall back to the standard case
     return s:ChangeSurroundingFunctionCall()
@@ -93,9 +110,9 @@ xnoremap <Plug>DsfTextObjectA :<c-u>call <SID>FunctionCallTextObject('a')<cr>
 onoremap <Plug>DsfTextObjectI :<c-u>call <SID>FunctionCallTextObject('i')<cr>
 xnoremap <Plug>DsfTextObjectI :<c-u>call <SID>FunctionCallTextObject('i')<cr>
 function! s:FunctionCallTextObject(mode)
-  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards')
+  let [success, opening_bracket] = dsf#SearchFunctionStart('forwards', 'cursor')
   if !success
-    let [success, opening_bracket] = dsf#SearchFunctionStart('backwards')
+    let [success, opening_bracket] = dsf#SearchFunctionStart('backwards', 'cursor')
   endif
 
   if !success

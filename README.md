@@ -20,6 +20,8 @@ SomeStruct{cursor_here: "Something"} //=> cursor_here: "Something"
 
 By pressing `dsf` (which stands for "delete surrounding function call") with the cursor on `cursor_here`, you get the result on the right.
 
+### More mappings
+
 The plugin defines `csf` to "change surrounding function call", which deletes only the function itself and leaves the cursor waiting to enter a new name.
 
 For convenience, the `dsnf` (the "n" standing for "next") mapping will look for a function call after the cursor to delete:
@@ -29,6 +31,8 @@ var result = function_call(foo, bar(baz));
 // With the cursor on "foo", pressing dsnf results in:
 var result = function_call(foo, baz);
 ```
+
+### Text objects
 
 The text objects for `if` and `af` manipulate function calls with their contents. Given this example:
 
@@ -50,8 +54,23 @@ var result = function_call();
 
 To learn more about how text objects work, try [`:help text-objects`](http://vimhelp.appspot.com/motion.txt.html#text%2dobjects).
 
-If you'd like to set your own mappings, instead of using the built-ins, simply set the variable `g:dsf_no_mappings` to `1` and use the <Plug> mappings provided by the plugin:
+### Multiline
 
+The plugin also works on multiline function calls, for example:
+
+``` ruby
+foo = one(
+  two
+)
+
+foo(two)
+```
+
+But note that if you have multiple items in the list, their indentation will be untouched. Only the starting and ending parts of the surrounding function call will be removed with their newlines. (For manipulating the insides of the function call, consider my other plugins, [splitjoin](https://github.com/AndrewRadev/splitjoin.vim) and [sideways](https://github.com/AndrewRadev/sideways.vim).)
+
+### Customization
+
+If you'd like to set your own mappings, instead of using the built-ins, simply set the variable `g:dsf_no_mappings` to `1` and use the <Plug> mappings provided by the plugin:
 
 ``` vim
 let g:dsf_no_mappings = 1
