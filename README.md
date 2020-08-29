@@ -63,10 +63,10 @@ foo = one(
   two
 )
 
-foo(two)
+foo = two
 ```
 
-But note that if you have multiple items in the list, their indentation will be untouched. Only the starting and ending parts of the surrounding function call will be removed with their newlines. (For manipulating the insides of the function call, consider my other plugins, [splitjoin](https://github.com/AndrewRadev/splitjoin.vim) and [sideways](https://github.com/AndrewRadev/sideways.vim).)
+The insides of the function will be automatically indented using the `=` operator to compensate for any potential changes in indentation level.
 
 ### Customization
 

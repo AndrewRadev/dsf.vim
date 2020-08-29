@@ -86,4 +86,26 @@ RSpec.describe "Ruby (Multiline)" do
         boo #
     EOF
   end
+
+  specify "tries to preserve indentation" do
+    set_file_contents <<~EOF
+      foo(
+        bar(
+          one,
+          two
+        )
+      )
+    EOF
+
+    vim.search 'one'
+    vim.feedkeys 'dsf'
+    vim.write
+
+    assert_file_contents <<~EOF
+      foo(
+        one,
+        two
+      )
+    EOF
+  end
 end

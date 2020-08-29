@@ -59,16 +59,20 @@ endfunction
 
 " Actually perform the deletion -- expects to be at the start of a function call.
 function! s:Delete(opening_bracket)
+  let start_line = line('.')
+
   " delete everything up to the bracket
   exe 'normal! dt'.a:opening_bracket
 
   " jump to the matching bracket
   normal %
   let closing_bracket = getline('.')[col('.') - 1]
+  let end_line = line('.')
 
   if line('.') > 1 && search('^\s*\%#', 'Wbcn', line('.'))
     " then we have a multiline closing bracket, delete till the previous line
     normal! vk$"_d
+    let end_line -= 1
   elseif search('\s\+\%#', 'Wb', line('.'))
     " then we have whitespace before the line, clear it
     exe 'normal! "_df'.closing_bracket
@@ -79,7 +83,12 @@ function! s:Delete(opening_bracket)
 
   normal! ``
   let saved_view = winsaveview()
+
   keeppatterns exe 's/\%#'.escape(a:opening_bracket, '[').'\_s*//'
+  if end_line - start_line > 1
+    exe start_line.','.(end_line - 1).'normal! v='
+  endif
+
   call winrestview(saved_view)
 endfunction
 
