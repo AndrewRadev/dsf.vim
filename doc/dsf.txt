@@ -51,6 +51,8 @@ something similar to one), even if it happens to be namespaced. Some examples:
 By pressing `dsf` (which stands for "delete surrounding function call") with
 the cursor on `cursor_here`, you get the result on the right.
 
+More mappings ~
+
 The plugin defines `csf` to "change surrounding function call", which deletes
 only the function itself and leaves the cursor waiting to enter a new name.
 
@@ -61,6 +63,8 @@ for a function call after the cursor to delete:
     // With the cursor on "foo", pressing dsnf results in:
     var result = function_call(foo, baz);
 <
+Text objects ~
+
 The text objects for `if` and `af` manipulate function calls with their
 contents. Given this example:
 >
@@ -77,6 +81,23 @@ Typing `dif` ("inner function call") with the cursor anywhere on
     var result = function_call();
 <
 To learn more about how text objects work, try the `:help` for |text-objects|.
+
+Multiline ~
+
+The plugin also works on multiline function calls, for example:
+>
+    foo = one(
+      two
+    )
+
+    foo(two)
+<
+But note that if you have multiple items in the list, their indentation will
+be untouched. Only the starting and ending parts of the surrounding function
+call will be removed with their newlines. (For manipulating the insides of the
+function call, consider my other plugins, "splitjoin" and "sideways".)
+
+Customization ~
 
 If you'd like to set your own mappings, instead of using the built-ins, simply
 set the variable `g:dsf_no_mappings` to `1` and use the <Plug> mappings
