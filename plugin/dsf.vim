@@ -87,7 +87,7 @@ function! s:Delete(opening_bracket)
   normal! ``
   let saved_view = winsaveview()
 
-  keeppatterns exe 's/\%#'.escape(a:opening_bracket, '[').'\_s*//'
+  exe 'keeppatterns s/\%#'.escape(a:opening_bracket, '[').'\_s*//'
   if end_line - start_line > 1
     exe start_line.','.(end_line - 1).'normal! v='
   endif
