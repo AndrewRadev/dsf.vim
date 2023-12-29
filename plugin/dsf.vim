@@ -29,6 +29,9 @@ autocmd FileType rust
 autocmd FileType css,scss,less
       \ let b:dsf_function_pattern = '\(\k\|-\)\+'
 
+autocmd FileType tex
+      \ let b:dsf_function_pattern = '\\\k\+'
+
 autocmd FileType vim
       \ let b:dsf_namespace_pattern = '\k\+\%(\.\|:\|#\)'
 
