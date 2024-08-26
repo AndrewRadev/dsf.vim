@@ -68,6 +68,14 @@ foo = two
 
 The insides of the function will be automatically indented using the `=` operator to compensate for any potential changes in indentation level.
 
+### LaTeX
+
+For LaTeX expressions in particular, there are cases like `\frac{numerator}{denominator}` where a "function" includes two bits of curly brackets. The plugin will only work with the cursor in the first bracket, but it will affect the second one as well.
+
+If you run into issues with this, you can disable it with `let g:dsf_latex_special_handling = 0`, but ideally you should open a github issue with an example I could fix.
+
+This is only activated for the `tex` filetype at this time.
+
 ### Customization
 
 If you'd like to set your own mappings, instead of using the built-ins, simply set the variable `g:dsf_no_mappings` to `1` and use the <Plug> mappings provided by the plugin:
