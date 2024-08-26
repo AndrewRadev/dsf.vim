@@ -22,6 +22,10 @@ if !exists('g:dsf_namespace_pattern')
   let g:dsf_namespace_pattern = '\k\+\%(\.\|::\)'
 endif
 
+if !exists('g:dsf_latex_special_handling')
+  let g:dsf_latex_special_handling = 1
+endif
+
 autocmd FileType ruby
       \ let b:dsf_function_pattern = '\k\+[?!.]\='
 autocmd FileType rust
@@ -63,6 +67,7 @@ endfunction
 " Actually perform the deletion -- expects to be at the start of a function call.
 function! s:Delete(opening_bracket)
   let start_line = line('.')
+  let saved_view = winsaveview()
 
   " delete everything up to the bracket
   exe 'normal! dt'.a:opening_bracket
@@ -84,8 +89,25 @@ function! s:Delete(opening_bracket)
     normal! "_x
   endif
 
-  normal! ``
-  let saved_view = winsaveview()
+  if g:dsf_latex_special_handling && &ft == 'tex'
+    " after the closing bracket, there might be another set of brackets, and
+    " we'd be on top of them:
+    for bracket_pair in ['{}', '[]']
+      let opening = bracket_pair[0]
+      let closing = bracket_pair[1]
+
+      if getline('.')[col('.') - 1] == opening
+        normal %
+
+        if getline('.')[col('.') - 1] == closing
+          exe 'normal! da'.closing
+          break
+        endif
+      endif
+    endfor
+  endif
+
+  call winrestview(saved_view)
 
   exe 'keeppatterns s/\%#'.escape(a:opening_bracket, '[').'\_s*//'
   if end_line - start_line > 1
@@ -121,6 +143,7 @@ onoremap <Plug>DsfTextObjectA :<c-u>call <SID>FunctionCallTextObject('a')<cr>
 xnoremap <Plug>DsfTextObjectA :<c-u>call <SID>FunctionCallTextObject('a')<cr>
 onoremap <Plug>DsfTextObjectI :<c-u>call <SID>FunctionCallTextObject('i')<cr>
 xnoremap <Plug>DsfTextObjectI :<c-u>call <SID>FunctionCallTextObject('i')<cr>
+
 function! s:FunctionCallTextObject(mode)
   let [success, opening_bracket] = dsf#SearchFunctionStart('forwards', 'cursor')
   if !success
@@ -133,9 +156,42 @@ function! s:FunctionCallTextObject(mode)
 
   if a:mode == 'i'
     exe 'normal! f'.opening_bracket.'vi'.opening_bracket
-  else " a:mode == 'a'
-    exe 'normal! vf'.opening_bracket.'%'
+    return
   endif
+
+  " a:mode == 'a':
+
+  if !g:dsf_latex_special_handling || &ft != 'tex'
+    exe 'normal! vf'.opening_bracket.'%'
+    return
+  endif
+
+  " Filetype is 'tex', special handling:
+
+  " after the closing bracket, there might be another set of brackets,
+  " move to the closing and then right to find them:
+  let saved_view = winsaveview()
+
+  exe 'normal! f'.opening_bracket.'%'
+  let byte_position = line2byte(line('.')) + col('.') - 1
+  normal! l
+
+  for bracket_pair in ['{}', '[]']
+    let opening = bracket_pair[0]
+    let closing = bracket_pair[1]
+
+    if getline('.')[col('.') - 1] == opening
+      normal %
+
+      if getline('.')[col('.') - 1] == closing
+        let byte_position = line2byte(line('.')) + col('.') - 1
+        break
+      endif
+    endif
+  endfor
+
+  call winrestview(saved_view)
+  exe 'normal! vf'.opening_bracket.byte_position.'go'
 endfunction
 
 if !g:dsf_no_mappings

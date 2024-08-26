@@ -194,6 +194,21 @@ The pattern is a Vim regex, if you need more information on those, check the
 
 Note that this can be changed per-buffer by setting `b:dsf_namespace_pattern`.
 
+                                                  *g:dsf_latex_special_handling*
+>
+    let g:dsf_latex_special_handling = 0
+<
+Default value: 1
+
+In a latex file, an expression like `\frac{dY}{dt}` is going to be treated as
+a "function", though only with the cursor in the first pair of brackets. The
+second pair of brackets will end up being left over in the case of a deletion.
+
+This variable controls whether the plugin will attempt to also delete the
+second pair of brackets. It's on by default, but it can be turned off in case
+it causes trouble. It's only on when the filetype is `tex`, so if you want
+support for other filetypes or find any problems, please open an issue.
+
 
 ==============================================================================
 ISSUES                                                              *dsf-issues*

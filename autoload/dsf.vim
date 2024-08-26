@@ -6,6 +6,9 @@
 "
 " Returns [success, opening_bracket]
 "
+" TODO: A cleaner approach that handles latex better: return byte positions of
+" opening, closing, and extra deletables.
+"
 function! dsf#SearchFunctionStart(direction, scope)
   let saved_view        = winsaveview()
   let brackets          = dsf#Setting('dsf_brackets')
